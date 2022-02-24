@@ -1,7 +1,7 @@
 require 'date'
 require 'terminal-table'
 class Account
-  attr_reader :balance, :transaction_list, :date
+  attr_reader :balance, :transaction_list
 
   STARTING_BALANCE = 0
   def initialize(balance = STARTING_BALANCE)
@@ -29,10 +29,11 @@ class Account
   end
 
   def print_transaction
-      puts 'date || credit || debit || balance'
+    puts 'date || credit || debit || balance'
     @transaction_list.each do |log|
       puts "#{log[:_date]} || #{log[:deposit]} || " + 
       "#{log[:withdraw]} || #{log[:_balance]}"
     end
+    puts nil
   end
 end

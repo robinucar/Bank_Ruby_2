@@ -2,7 +2,6 @@ require 'account'
 require 'date'
 describe Account do
   let(:account) { Account.new }
-  let(:account1) { Account.new(50) }
   it 'balance should  increase by deposit amount' do
     account.deposit(100)
     expect(account.balance).to eq 100
@@ -29,7 +28,7 @@ describe Account do
     expect(account.transaction_list).to be_empty
   end
 
-  it 'should store all transaction' do
+  it 'should store all transactions' do
     account.deposit(2500)
     account.withdraw(500)
     expect(account.transaction_list.length).to eq 2
