@@ -1,48 +1,38 @@
 require 'date'
 require 'terminal-table'
 class Account
-  attr_reader :balance, :transaction_list
-  attr_accessor :deposit_amount, :withdraw_amount
+  attr_reader :balance, :transaction_list, :date
 
   STARTING_BALANCE = 0
   def initialize(balance = STARTING_BALANCE)
     @balance = balance
     @transaction_list = []
+    @date = DateTime.now.strftime('%d/%m/%Y')
   end
 
-  def deposit(deposit_amount, date = DateTime.now.strftime('%d/%m/%Y'))
-    @deposit_amount = deposit_amount
-    @date = date
-    @balance += @deposit_amount
-    @withdraw_amount = nil
-    save_transaction
+  def deposit(amount)
+    @balance += amount
+
+    save_transaction(@date, amount, nil, @balance)
   end
 
-  def withdraw(withdraw_amount, date = DateTime.now())
-    @withdraw_amount = withdraw_amount
-    @deposit_amount = nil
-    @date = date
-    raise 'Payment Failed, your balance is 0' if @balance == 0
-    raise 'Payment Failed, your balance is less than witdraw amount' if @balance < @withdraw_amount
+  def withdraw(amount)
+    raise 'Payment Failed, your balance is 0' if @balance.zero?
+    raise 'Payment Failed, your balance is less than witdraw amount' if @balance < amount
 
-    @balance -= @withdraw_amount
-    save_transaction
+    @balance -= amount
+    save_transaction(@date, nil, amount, @balance)
   end
 
-  def save_transaction
-    @transaction_list << { date: @date, deposit: @deposit_amount, withdraw: @withdraw_amount, balance: @balance }
+  def save_transaction(_date, deposit_amount, withdraw_amount, _balance)
+    @transaction_list << { _date: @date, deposit: deposit_amount, withdraw: withdraw_amount, _balance: @balance }
   end
 
   def print_transaction
-    rows = []
-    table = Terminal::Table.new rows: rows
-    i = @transaction_list.length
-    while i > 0
-      rows << [@transaction_list[i - 1][:date], @transaction_list[i - 1][:deposit], @transaction_list[i - 1][:withdraw], @transaction_list[i - 1][:balance]]
-      i -= 1
+      puts 'date || credit || debit || balance'
+    @transaction_list.each do |log|
+      puts "#{log[:_date]} || #{log[:deposit]} || " + 
+      "#{log[:withdraw]} || #{log[:_balance]}"
     end
-    table = Terminal::Table.new rows: rows
-    table = Terminal::Table.new headings: %w[date credit debit balance], rows: rows
-    puts table
   end
 end
