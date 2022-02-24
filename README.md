@@ -57,6 +57,7 @@ account.print_transaction
 shows following output
 ```
 date || credit || debit || balance
+
 24/02/2022 || 100 ||  || 100                         
 24/02/2022 ||  || 10 || 90           
 ```
